@@ -155,7 +155,7 @@ func (v *volumeDriver) Unmount(req volume.Request) (resp volume.Response) {
 		logctx.Error(resp.Err)
 		return
 	}
-	if err := os.Remove(path); err != nil {
+	if err := os.Remove(path); err != nil && !os.IsNotExist(err) {
 		resp.Err = fmt.Sprintf("error removing mountpoint: %v", err)
 		logctx.Error(resp.Err)
 		return
