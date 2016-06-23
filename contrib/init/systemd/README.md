@@ -10,7 +10,6 @@
 4. Reload systemd
 
 ## In-depth walkthrough
-To ssh onto machines created with the `docker-machine` commands, you'll probably need to ssh via `docker-machine ssh [machinename]` to perform the following.
 
 0. `sudo -s`
 0. Download the tar.gz from "Releases" tab of the repo for copies of config files
@@ -22,8 +21,6 @@ To ssh onto machines created with the `docker-machine` commands, you'll probably
 0. Save the `.default` file to `/etc/default/azurefile-dockervolumedriver`
     + Copy the file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.default /etc/default/azurefile-dockervolumedriver`
 0. Edit `/etc/default/azurefile-dockervolumedriver` with your Azure Storage Account credentials.
-    + Edit in vi (or another editor): `vi /etc/default/azurefile-dockervolumedriver`
-    + Use ESC, :, x, ENTER to save an exit if you use vi
 0. Save the `.service` file to `/etc/systemd/system/azurefile-dockervolumedriver.service`
     + Make the requisite directories if they don't exist: `mkdir /etc/systemd && mkdir /etc/systemd/system`
     + Copy the relevant file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.service /etc/systemd/system/`
@@ -32,7 +29,7 @@ To ssh onto machines created with the `docker-machine` commands, you'll probably
 0. Run `systemctl start azurefile-dockervolumedriver`
 0. Check status via `systemctl status azurefile-dockervolumedriver`
 
-To test, from your base machine i.e. not inside your docker-machine, try by creating a volume and running a container with it:
+To test, try to create a volume and running a container with it:
 
     docker volume create -d azurefile --name myvol -o share=myvol
     docker run -i -t -v myvol:/data busybox
