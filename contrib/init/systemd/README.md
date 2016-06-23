@@ -6,24 +6,22 @@
 ## TL;DR
 1. Get the latest [release](https://github.com/Azure/azurefile-dockervolumedriver/releases)
 2. Put the binary into `/usr/bin/azurefile-dockervolumedriver`
-3. Get the .default and .service files from the .tar.gz file and deploy them
+3. Get the .default and .service files and deploy them
 4. Reload systemd
 
 ## In-depth walkthrough
 
 0. `sudo -s`
-0. Download the tar.gz from "Releases" tab of the repo for copies of config files
-    + Currently this would be `wget https://github.com/Azure/azurefile-dockervolumedriver/archive/0.2.1.tar.gz` 
-    + Decompress the archive:  `tar -xvf 0.2.1.tar.gz`
+0. Use wget to get the `azurefile-dockervolumedriver.default` and `azurefile-dockervolumedriver.service` files from GitHub. These are in the `../contrib/init/systemd` directory.
 0. Download the binary from the "Releases" tab of the repo to `/usr/bin/azurefile-dockervolumedriver`
-    + Use wget: `wget -qO/usr/bin/azurefile-dockervolumedriver https://github.com/Azure/azurefile-dockervolumedriver/releases/download/0.2.1/azurefile-dockervolumedriver`
+    + Use wget to download to dir: `wget -qO/usr/bin/azurefile-dockervolumedriver https://github.com/Azure/azurefile-dockervolumedriver/releases/download/[CURRENT RELEASE NUMBER]/azurefile-dockervolumedriver`
     + Make it executable `chmod +x /opt/bin/azurefile-dockervolumedriver`
 0. Save the `.default` file to `/etc/default/azurefile-dockervolumedriver`
-    + Copy the file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.default /etc/default/azurefile-dockervolumedriver`
+    + Copy the file: `cp azurefile-dockervolumedriver.default /etc/default/azurefile-dockervolumedriver`
 0. Edit `/etc/default/azurefile-dockervolumedriver` with your Azure Storage Account credentials.
 0. Save the `.service` file to `/etc/systemd/system/azurefile-dockervolumedriver.service`
     + Make the requisite directories if they don't exist: `mkdir /etc/systemd && mkdir /etc/systemd/system`
-    + Copy the relevant file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.service /etc/systemd/system/`
+    + Copy the relevant file: `cp azurefile-dockervolumedriver.service /etc/systemd/system/`
 0. Run `systemctl daemon-reload`
 0. Run `systemctl enable azurefile-dockervolumedriver`
 0. Run `systemctl start azurefile-dockervolumedriver`
