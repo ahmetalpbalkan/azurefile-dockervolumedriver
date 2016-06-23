@@ -13,9 +13,8 @@
 To ssh onto machines created with the `docker-machine` commands, you'll probably need to ssh via `docker-machine ssh [machinename]` to perform the following.
 
 0. `sudo -s`
-0. Download the tar.gz from "Releases" tab of the repo
+0. Download the tar.gz from "Releases" tab of the repo for copies of config files
     + Currently this would be `wget https://github.com/Azure/azurefile-dockervolumedriver/archive/0.2.1.tar.gz` 
-0. Extract and copy the extracted files to `/usr/bin/azurefile-dockervolumedriver`: 
     + Decompress the archive:  `tar -xvf 0.2.1.tar.gz`
 0. Download the binary from the "Releases" tab of the repo to `/usr/bin/azurefile-dockervolumedriver`
     + Use wget: `wget -qO/usr/bin/azurefile-dockervolumedriver https://github.com/Azure/azurefile-dockervolumedriver/releases/download/0.2.1/azurefile-dockervolumedriver`
