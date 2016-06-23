@@ -13,13 +13,13 @@
 To ssh onto machines created with the `docker-machine` commands, you'll probably need to ssh via `docker-machine ssh` to perform the following.
 
 0. `sudo -s`
-0. Download the tar.gz from "Releases" tab of the repo: `wget [url]`
+0. Download the tar.gz from "Releases" tab of the repo
     + Currently this would be `wget https://github.com/Azure/azurefile-dockervolumedriver/archive/0.2.1.tar.gz` 
 0. Extract and copy the extracted files to `/usr/bin/azurefile-dockervolumedriver`: 
     + Decompress the archive:  `tar -xvf 0.2.1.tar.gz`
-    + Make destination directory: `mkdir /usr/bin/azurefile-dockervolumedriver`
-    + Copy the files across: `cp azurefile-dockervolumedriver-0.2.1/* /usr/bin/azurefile-dockervolumedriver -R`
-0. Make it executable: `chmod +x /usr/bin/azurefile-dockervolumedriver`
+0. Download the binary from the "Releases" tab of the repo to `/usr/bin/azurefile-dockervolumedriver`
+    + Use wget: `wget -qO/usr/bin/azurefile-dockervolumedriver https://github.com/Azure/azurefile-dockervolumedriver/releases/download/0.2.1/azurefile-dockervolumedriver`
+    + Make it executable `chmod +x /opt/bin/azurefile-dockervolumedriver`
 0. Save the `.default` file to `/etc/default/azurefile-dockervolumedriver`
     + Copy the file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.default /etc/default/azurefile-dockervolumedriver`
 0. Edit `/etc/default/azurefile-dockervolumedriver` with your Azure Storage Account credentials.
