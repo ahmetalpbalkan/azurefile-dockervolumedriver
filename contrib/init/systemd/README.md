@@ -5,12 +5,12 @@
 
 ## TL;DR
 1. Get the latest [release](https://github.com/Azure/azurefile-dockervolumedriver/releases)
-2. Put the files into `/usr/bin/azurefile-dockervolumedriver`
-3. Configure plugin with a `/etc/default/azurefile-dockervolumedriver` file
-4. 
+2. Put the binary into `/usr/bin/azurefile-dockervolumedriver`
+3. Get the .default and .service files from the .tar.gz file and deploy them
+4. Reload systemd
 
 ## In-depth walkthrough
-To ssh onto machines created with the `docker-machine` commands, you'll probably need to ssh via `docker-machine ssh` to perform the following.
+To ssh onto machines created with the `docker-machine` commands, you'll probably need to ssh via `docker-machine ssh [machinename]` to perform the following.
 
 0. `sudo -s`
 0. Download the tar.gz from "Releases" tab of the repo
@@ -23,8 +23,8 @@ To ssh onto machines created with the `docker-machine` commands, you'll probably
 0. Save the `.default` file to `/etc/default/azurefile-dockervolumedriver`
     + Copy the file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.default /etc/default/azurefile-dockervolumedriver`
 0. Edit `/etc/default/azurefile-dockervolumedriver` with your Azure Storage Account credentials.
-    + Edit in vi: `vi /etc/default/azurefile-dockervolumedriver`
-    + Use ESC, :, x, ENTER to save an exit
+    + Edit in vi (or another editor): `vi /etc/default/azurefile-dockervolumedriver`
+    + Use ESC, :, x, ENTER to save an exit if you use vi
 0. Save the `.service` file to `/etc/systemd/system/azurefile-dockervolumedriver.service`
     + Make the requisite directories if they don't exist: `mkdir /etc/systemd && mkdir /etc/systemd/system`
     + Copy the relevant file: `cp azurefile-dockervolumedriver-0.2.1/contrib/init/systemd/azurefile-dockervolumedriver.service /etc/systemd/system/`
@@ -33,7 +33,7 @@ To ssh onto machines created with the `docker-machine` commands, you'll probably
 0. Run `systemctl start azurefile-dockervolumedriver`
 0. Check status via `systemctl status azurefile-dockervolumedriver`
 
-Try by creating a volume and running a container with it:
+To test, from your base machine i.e. not inside your docker-machine, try by creating a volume and running a container with it:
 
     docker volume create -d azurefile --name myvol -o share=myvol
     docker run -i -t -v myvol:/data busybox
