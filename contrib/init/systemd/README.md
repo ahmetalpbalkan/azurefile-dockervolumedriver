@@ -20,7 +20,7 @@
     + Copy the file: `cp azurefile-dockervolumedriver.default /etc/default/azurefile-dockervolumedriver`
 0. Edit `/etc/default/azurefile-dockervolumedriver` with your Azure Storage Account credentials.
 0. Save the `.service` file to `/etc/systemd/system/azurefile-dockervolumedriver.service`
-    + Make the requisite directories if they don't exist: `mkdir /etc/systemd && mkdir /etc/systemd/system`
+    + [Ubuntu 15.x only] Make the requisite directories if they don't exist: `mkdir /etc/systemd && mkdir /etc/systemd/system`
     + Copy the relevant file: `cp azurefile-dockervolumedriver.service /etc/systemd/system/`
 0. Run `systemctl daemon-reload`
 0. Run `systemctl enable azurefile-dockervolumedriver`
