@@ -84,7 +84,6 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 	if ok, err := v.cl.CreateShareIfNotExists(share); err != nil {
 		resp.Err = fmt.Sprintf("error creating azure file share: %v", err)
 		logctx.Error(resp.Err)
-		return
 	} else if ok {
 		logctx.Infof("created azure file share %q", share)
 	}
@@ -92,12 +91,19 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 	// Create a directory
 	remotepath := req.Options["remotepath"]
 	if remotepath != "" {
-		if err := v.cl.CreateDirectory(share, remotepath); err != nil {
-			resp.Err = fmt.Sprintf("error creating azure file share: %v", err)
-			logctx.Error(resp.Err)
-			return
-		} else {
-			logctx.Infof("created azure file share %q", share)
+		directories := strings.Split(remotepath, "/")
+		fullDirectory := ""
+		for i, d := range directories {
+			fullDirectory = fmt.Sprintf("%s/%s", fullDirectory, d)
+			if i == 0 {
+				fullDirectory = fullDirectory[1:]
+			}
+			if err := v.cl.CreateDirectory(share, fullDirectory); err != nil {
+				resp.Err = fmt.Sprintf("error creating azure directory: %v", err)
+				logctx.Error(resp.Err)
+			} else {
+				logctx.Infof("created azure directory %q", fullDirectory)
+			}
 		}
 	}
 
