@@ -90,3 +90,29 @@ func (f FileServiceClient) deleteShare(name string) (*storageResponse, error) {
 	uri := f.client.getEndpoint(fileServiceName, pathForFileShare(name), url.Values{"restype": {"share"}})
 	return f.client.exec("DELETE", uri, f.client.getStandardHeaders(), nil)
 }
+
+// DIRECTORY SECTION
+
+// get a path for directory for specified share
+func pathForDirectory(share string, directory string) string {
+	return fmt.Sprintf("/%s/%s", share, directory)
+}
+
+// create a directory api call
+func (f FileServiceClient) createDirectory(share string, directory string) (*storageResponse, error) {
+	uri := f.client.getEndpoint(fileServiceName, pathForDirectory(share, directory), url.Values{"restype": {"directory"}})
+	headers := f.client.getStandardHeaders()
+	headers["Content-Length"] = "0"
+	return f.client.exec("PUT", uri, headers, nil)
+}
+
+// create a directory
+func (f FileServiceClient) CreateDirectory(share string, directory string) error {
+	resp, err := f.createDirectory(share, directory)
+	if err != nil {
+		return err
+	}
+	defer resp.body.Close()
+	return checkRespCode(resp.statusCode, []int{http.StatusCreated})
+}
+

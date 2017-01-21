@@ -89,6 +89,18 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 		logctx.Infof("created azure file share %q", share)
 	}
 
+	// Create a directory
+	remotepath := req.Options["remotepath"]
+	if remotepath != "" {
+		if err := v.cl.CreateDirectory(share, remotepath); err != nil {
+			resp.Err = fmt.Sprintf("error creating azure file share: %v", err)
+			logctx.Error(resp.Err)
+			return
+		} else {
+			logctx.Infof("created azure file share %q", share)
+		}
+	}
+
 	// Save volume metadata
 	if err := v.meta.Set(req.Name, volMeta); err != nil {
 		resp.Err = fmt.Sprintf("error saving metadata: %v", err)
