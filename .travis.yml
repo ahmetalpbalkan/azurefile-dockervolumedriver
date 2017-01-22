@@ -5,6 +5,7 @@ install:
 before_script:
 - go get -u github.com/golang/lint/golint
 - go get -u github.com/ahmetalpbalkan/govvv
+- go get -u github.com/bouk/monkey
 go: 1.7
 script:
 - test -z "$(gofmt -s -l -w . | tee /dev/stderr)"

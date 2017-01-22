@@ -115,4 +115,3 @@ func (f FileServiceClient) CreateDirectory(share string, directory string) error
 	defer resp.body.Close()
 	return checkRespCode(resp.statusCode, []int{http.StatusCreated})
 }
-

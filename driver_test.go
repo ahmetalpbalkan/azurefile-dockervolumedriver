@@ -33,4 +33,3 @@ func TestCreateWithShareCallFunc(t *testing.T) {
 		t.Error("Create should return possible error from CreateShareIfNotExists method!")
 	}
 }
-
