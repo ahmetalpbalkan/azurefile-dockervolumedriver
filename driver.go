@@ -81,10 +81,11 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 	logctx.Debug("request accepted")
 
 	// Create azure file share
-	if ok, err := v.cl.CreateShareIfNotExists(share); err != nil {
-		resp.Err = fmt.Sprintf("error creating azure file share: %v", err)
+	createShareOk, createShareErr := v.cl.CreateShareIfNotExists(share)
+	if createShareErr != nil {
+		resp.Err = fmt.Sprintf("error creating azure file share: %v", createShareErr)
 		logctx.Error(resp.Err)
-	} else if ok {
+	} else if createShareOk {
 		logctx.Infof("created azure file share %q", share)
 	}
 
@@ -99,12 +100,16 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 				fullDirectory = fullDirectory[1:]
 			}
 			if err := v.cl.CreateDirectory(share, fullDirectory); err != nil {
-				resp.Err = fmt.Sprintf("error creating azure directory: %v", err)
-				logctx.Error(resp.Err)
+				logctx.Error(fmt.Sprintf("error creating azure directory: %v", err))
 			} else {
 				logctx.Infof("created azure directory %q", fullDirectory)
 			}
 		}
+	}
+
+	// fallback on unsuccess create share request
+	if createShareErr != nil {
+		return
 	}
 
 	// Save volume metadata
