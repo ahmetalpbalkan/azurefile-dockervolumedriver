@@ -33,3 +33,6 @@ func TestCreateWithShareCallFunc(t *testing.T) {
 		t.Error("Create should return possible error from CreateShareIfNotExists method!")
 	}
 }
+
+//TODO: cover the behaviour with 'remotepath' parameter in Create function
+//      TestCreateWithRemotepathParamCallFunc, patch CreateDirectory
