@@ -315,6 +315,7 @@ func mount(accountName, accountKey, storageBase, mountPath string, options Volum
 		fmt.Sprintf("dir_mode=%s", options.DirMode),
 		fmt.Sprintf("uid=%s", options.UID),
 		fmt.Sprintf("gid=%s", options.GID),
+		"mfsymlinks",
 	}
 	if options.NoLock {
 		opts = append(opts, "nolock")

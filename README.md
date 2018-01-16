@@ -148,9 +148,9 @@ link above. The following instructions are for compiling the project from source
 In order to compile this program, you need to have Go 1.6:
 
 ```sh
-$ git clone https://github.com/Azure/azurefile-dockervolumedriver src/azurefile
+$ git clone https://github.com/Azure/azurefile-dockervolumedriver src/azurefile-dockervolumedriver
 $ export GOPATH=`pwd`
-$ cd src/azurefile
+$ cd src/azurefile-dockervolumedriver
 $ go build
 $ ./azurefile -h
 ```
