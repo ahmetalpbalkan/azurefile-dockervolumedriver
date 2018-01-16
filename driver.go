@@ -60,7 +60,7 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 		"name":      req.Name,
 		"options":   req.Options})
 
-	volMeta, err := v.meta.Validate(req.Options)
+	volMeta, err := v.meta.Validate(req.Options, req.Name)
 	if err != nil {
 		resp.Err = fmt.Sprintf("error validating metadata: %v", err)
 		logctx.Error(resp.Err)
@@ -71,7 +71,7 @@ func (v *volumeDriver) Create(req volume.Request) (resp volume.Response) {
 	volMeta.Account = v.accountName
 	volMeta.CreatedAt = time.Now().UTC()
 
-	share := req.Options["share"]
+	share := volMeta.Options.Share
 	if share == "" {
 		resp.Err = "missing volume option: 'share'"
 		logctx.Error(resp.Err)
@@ -316,15 +316,24 @@ func mount(accountName, accountKey, storageBase, mountPath string, options Volum
 		fmt.Sprintf("uid=%s", options.UID),
 		fmt.Sprintf("gid=%s", options.GID),
 	}
+
+	if len(options.Cache) > 0 {
+		opts = append(opts, fmt.Sprintf("cache=%s", options.Cache))
+	}
+
 	if options.NoLock {
 		opts = append(opts, "nolock")
+	}
+
+	if options.NoBrl {
+		opts = append(opts, "nobrl")
 	}
 
 	// TODO: replace with mount() syscall using docker/docker/pkg/mount
 	// (currently gives hard-to-debug 'invalid argument' error with the
 	// following arguments, my guess is, mount program does IP resolution
 	// and essentially passes a different set of options to system call).
-	cmd := exec.Command("mount", "-t", "cifs", mountURI, mountPath, "-o", strings.Join(opts, ","), "--verbose")
+	cmd := exec.Command("mount", "-t", "cifs", mountURI, mountPath, "-v", "-o", strings.Join(opts, ","))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("mount failed: %v\noutput=%q", err, out)

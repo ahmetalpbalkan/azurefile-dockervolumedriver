@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	recognizedOptions = []string{"share", "filemode", "dirmode", "uid", "gid", "nolock", "remotepath"}
+	recognizedOptions = []string{"share", "filemode", "dirmode", "uid", "gid", "nolock", "remotepath", "cache", "nobrl"}
 )
 
 type volumeMetadata struct {
@@ -26,7 +26,9 @@ type VolumeOptions struct {
 	DirMode    string `json:"dirmode"`
 	UID        string `json:"uid"`
 	GID        string `json:"gid"`
+	Cache      string `json:"cache"`
 	NoLock     bool   `json:"nolock"`
+	NoBrl      bool   `json:"nobrl"`
 	RemotePath string `json:"remotepath"`
 }
 
@@ -41,7 +43,7 @@ func newMetadataDriver(metaDir string) (*metadataDriver, error) {
 	return &metadataDriver{metaDir}, nil
 }
 
-func (m *metadataDriver) Validate(meta map[string]string) (volumeMetadata, error) {
+func (m *metadataDriver) Validate(meta map[string]string, name string) (volumeMetadata, error) {
 	var v volumeMetadata
 	var opts VolumeOptions
 
@@ -58,6 +60,11 @@ func (m *metadataDriver) Validate(meta map[string]string) (volumeMetadata, error
 			return v, fmt.Errorf("not a recognized volume driver option: %q", k)
 		}
 	}
+
+	if meta["share"] == "" {
+		meta["share"] = name
+	}
+
 	opts.Share = meta["share"]
 	opts.DirMode = meta["dirmode"]
 	opts.FileMode = meta["filemode"]
@@ -65,8 +72,16 @@ func (m *metadataDriver) Validate(meta map[string]string) (volumeMetadata, error
 	opts.UID = meta["uid"]
 	opts.RemotePath = meta["remotepath"]
 
+	if len(meta["cache"]) > 0 {
+		opts.Cache = meta["cache"]
+	}
+
 	if meta["nolock"] == "true" {
 		opts.NoLock = true
+	}
+
+	if meta["nobrl"] == "true" {
+		opts.NoBrl = true
 	}
 
 	return volumeMetadata{

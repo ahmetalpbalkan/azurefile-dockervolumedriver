@@ -1,0 +1,64 @@
+{
+    "Args": {
+      "Description": "",
+      "Name": "",
+      "Settable": null,
+      "Value": null
+    },
+    "Description": "Volume plugin for Azure File Storage",
+    "Documentation": "https://github.com/jmaitrehenry/azurefile-dockervolumedriver/.docker/plugin",
+    "Entrypoint": [
+      "azurefile-dockervolumedriver"
+    ],
+    "Env": [
+      {
+        "Description": "Azure storage account name",
+        "Name": "AZURE_STORAGE_ACCOUNT",
+        "Settable": [
+          "value"
+        ],
+        "Value": ""
+      },
+      {
+        "Description": "Azure storage account key",
+        "Name": "AZURE_STORAGE_ACCOUNT_KEY",
+        "Settable": [
+          "value"
+        ],
+        "Value": ""
+      },
+      {
+        "Description": "Enable verbose logging",
+        "Name": "DEBUG",
+        "Settable": [
+          "value"
+        ],
+        "Value": ""
+      }
+    ],
+    "Interface": {
+      "Socket": "azurefile.sock",
+      "Types": [
+        "docker.volumedriver/1.0"
+      ]
+    },
+    "Linux": {
+      "AllowAllDevices": true,
+      "Capabilities": ["CAP_SYS_ADMIN", "CAP_DAC_OVERRIDE", "CAP_DAC_READ_SEARCH"],
+      "Devices": null
+    },
+    "Mounts": [
+      {
+        "Source": "/dev",
+        "Destination": "/dev",
+        "Type": "bind",
+        "Options": ["rbind"]
+      }
+    ],
+    "Network": {
+      "Type": "host"
+    },
+    "PropagatedMount": "/var/run/docker/volumedriver/azurefile",
+    "User": {},
+    "WorkDir": ""
+}
